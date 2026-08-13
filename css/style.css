@@ -166,3 +166,49 @@ body {
     grid-template-columns: 1fr 1fr;
   }
 }
+
+
+.book-card {
+  background: #fff;
+  border: 1px solid #ddd0b8;
+  border-left: 6px solid var(--maroon);
+  border-radius: 3px;
+  padding: 1rem;
+  box-shadow: 2px 2px 0 rgba(43,33,26,0.08);
+}
+
+.book-title {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  margin: 0 0 0.25rem;
+}
+
+.book-author {
+  font-size: 0.85rem;
+  color: #5a5044;
+  margin: 0 0 0.4rem;
+}
+
+.book-category {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin: 0 0 0.6rem;
+}
+
+.book-availability {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 500;
+  margin: 0;
+}
+
+.status-available { color: #4c7a5b; }
+.status-unavailable { color: #a63c2e; }
+
+.empty-state {
+  grid-column: 1 / -1;
+  font-family: var(--font-mono);
+  color: #8a7f6d;
+}
