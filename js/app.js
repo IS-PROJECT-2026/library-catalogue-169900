@@ -69,7 +69,7 @@ function renderBooks(books) {
 
   bookGrid.innerHTML = books.length
     ? books.map(bookCardHTML).join("")
-    : `<p class="empty-state">No books match your search.</p>`;
+    : `<p class="empty-state">No books match your current filters.</p>`;
 }
 
 function renderReadingList() {
@@ -251,3 +251,12 @@ function init() {
 }
 
 init();
+
+//position this
+function renderBooks(books) {
+  if (!bookGrid) return;
+
+  bookGrid.innerHTML = books.length
+    ? books.map(bookCardHTML).join("")
+    : `<p class="empty-state">No books match your current filters.</p>`;
+}
