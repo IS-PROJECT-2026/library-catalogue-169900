@@ -16,7 +16,23 @@ const modalDescription = document.getElementById("modal-description");
 const modalAvailability = document.getElementById("modal-availability");
 
 let activeCategory = "all";
-let readingList = [];
+const READING_LIST_KEY = "library-catalogue:reading-list";
+
+function loadReadingList() {
+  try {
+    const raw = localStorage.getItem(READING_LIST_KEY);
+    return raw ? JSON.parse(raw) : [];
+  } catch (err) {
+    console.error("Could not read reading list, resetting.", err);
+    return [];
+  }
+}
+
+function saveReadingList() {
+  localStorage.setItem(READING_LIST_KEY, JSON.stringify(readingList));
+}
+
+let readingList = loadReadingList();
 
 // ---------- Rendering ----------
 
@@ -126,15 +142,13 @@ function closeModal() {
 // ---------- Reading list ----------
 
 function toggleReadingList(bookId) {
-  const normalizedId = String(bookId);
-  const index = readingList.indexOf(normalizedId);
-
+  const index = readingList.indexOf(bookId);
   if (index === -1) {
-    readingList.push(normalizedId);
+    readingList.push(bookId);
   } else {
     readingList.splice(index, 1);
   }
-
+  saveReadingList();
   renderReadingList();
   renderBooks(getFilteredBooks());
 }
