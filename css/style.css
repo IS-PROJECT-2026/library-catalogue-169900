@@ -175,40 +175,91 @@ body {
   border-radius: 3px;
   padding: 1rem;
   box-shadow: 2px 2px 0 rgba(43,33,26,0.08);
+  cursor: pointer;
 }
 
-.book-title {
+/* Utility for visually hidden labels (used by .sr-only in HTML) */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(43, 33, 26, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  z-index: 100;
+}
+
+.modal-overlay[hidden] { display: none; }
+
+.filter-chip:focus-visible,
+.search-bar input:focus-visible,
+.modal-close:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+}
+
+.modal {
+  background: var(--paper);
+  border-radius: 6px;
+  padding: 2rem;
+  max-width: 480px;
+  width: 100%;
+  position: relative;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+}
+
+.modal-close {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.9rem;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: var(--maroon);
+  line-height: 1;
+}
+
+.modal-title {
   font-family: var(--font-display);
-  font-size: 1rem;
   margin: 0 0 0.25rem;
+  padding-right: 1.5rem;
 }
 
-.book-author {
-  font-size: 0.85rem;
+.modal-author {
   color: #5a5044;
-  margin: 0 0 0.4rem;
+  margin: 0 0 0.5rem;
 }
 
-.book-category {
+.modal-category {
   font-family: var(--font-mono);
   font-size: 0.7rem;
   text-transform: uppercase;
   color: var(--gold);
-  margin: 0 0 0.6rem;
+  margin: 0 0 1rem;
 }
 
-.book-availability {
+.modal-description {
+  line-height: 1.6;
+  margin: 0 0 1rem;
+}
+
+.modal-availability {
   font-family: var(--font-mono);
-  font-size: 0.72rem;
+  font-size: 0.8rem;
   font-weight: 500;
   margin: 0;
-}
-
-.status-available { color: #4c7a5b; }
-.status-unavailable { color: #a63c2e; }
-
-.empty-state {
-  grid-column: 1 / -1;
-  font-family: var(--font-mono);
-  color: #8a7f6d;
 }

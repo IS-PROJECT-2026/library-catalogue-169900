@@ -2,6 +2,14 @@ const bookGrid = document.getElementById("book-grid");
 const searchInput = document.getElementById("search-input");
 const categoryFilters = document.getElementById("category-filters");
 
+const modalOverlay = document.getElementById("modal-overlay");
+const modalClose = document.getElementById("modal-close");
+const modalTitle = document.getElementById("modal-title");
+const modalAuthor = document.getElementById("modal-author");
+const modalCategory = document.getElementById("modal-category");
+const modalDescription = document.getElementById("modal-description");
+const modalAvailability = document.getElementById("modal-availability");
+
 let activeCategory = "all";
 
 function bookCardHTML(book) {
@@ -44,24 +52,77 @@ function handleFilterChange() {
   renderBooks(getFilteredBooks());
 }
 
+function openModal(book) {
+  if (
+    !modalOverlay ||
+    !modalTitle ||
+    !modalAuthor ||
+    !modalCategory ||
+    !modalDescription ||
+    !modalAvailability
+  ) {
+    return;
+  }
+
+  modalTitle.textContent = book.title;
+  modalAuthor.textContent = book.author;
+  modalCategory.textContent = book.category;
+  modalDescription.textContent = book.description;
+  modalAvailability.textContent = book.available ? "Available" : "Checked out";
+  modalAvailability.className = `modal-availability ${book.available ? "status-available" : "status-unavailable"}`;
+
+  modalOverlay.hidden = false;
+}
+
+function closeModal() {
+  if (!modalOverlay) return;
+  modalOverlay.hidden = true;
+}
+
 function handleCategoryClick(event) {
   const chip = event.target.closest(".filter-chip");
-  if (!chip) return;
+  if (!chip || !categoryFilters) return;
 
-  activeCategory = chip.dataset.category;
+  activeCategory = chip.dataset.category || "all";
 
   categoryFilters
     .querySelectorAll(".filter-chip")
     .forEach((el) => el.classList.remove("active"));
-  chip.classList.add("active");
 
+  chip.classList.add("active");
   handleFilterChange();
 }
 
-if (!bookGrid || !searchInput || !categoryFilters) {
-  console.warn("Missing required DOM elements: #book-grid, #search-input, or #category-filters.");
-} else {
+function handleGridClick(event) {
+  const card = event.target.closest(".book-card");
+  if (!card) return;
+
+  const book = BOOKS.find((b) => String(b.id) === card.dataset.id);
+  if (book) openModal(book);
+}
+
+function init() {
+  if (!bookGrid || !searchInput || !categoryFilters) {
+    console.warn("Missing required DOM elements: #book-grid, #search-input, or #category-filters.");
+    return;
+  }
+
   searchInput.addEventListener("input", handleFilterChange);
   categoryFilters.addEventListener("click", handleCategoryClick);
+  bookGrid.addEventListener("click", handleGridClick);
+
+  if (modalClose) modalClose.addEventListener("click", closeModal);
+  if (modalOverlay) {
+    modalOverlay.addEventListener("click", (e) => {
+      if (e.target === modalOverlay) closeModal();
+    });
+  }
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") closeModal();
+  });
+
   renderBooks(BOOKS);
 }
+
+init();
