@@ -18,10 +18,13 @@ const modalAvailability = document.getElementById("modal-availability");
 let activeCategory = "all";
 const READING_LIST_KEY = "library-catalogue:reading-list";
 
+// ---------- Reading list persistence ----------
+
 function loadReadingList() {
   try {
     const raw = localStorage.getItem(READING_LIST_KEY);
-    return raw ? JSON.parse(raw) : [];
+    const parsed = raw ? JSON.parse(raw) : [];
+    return Array.isArray(parsed) ? parsed.map(String) : [];
   } catch (err) {
     console.error("Could not read reading list, resetting.", err);
     return [];
@@ -49,8 +52,13 @@ function bookCardHTML(book) {
       <p class="book-author">${book.author}</p>
       <p class="book-category">${book.category}</p>
       <p class="book-availability ${availabilityClass}">${availability}</p>
+
       <button type="button" class="reading-list-btn" data-add="${bookId}">
         ${onList ? "✓ On your list" : "+ Add to reading list"}
+      </button>
+
+      <button type="button" class="availability-btn" data-toggle="${bookId}">
+        ${book.available ? "Mark as checked out" : "Mark as returned"}
       </button>
     </article>
   `;
@@ -88,7 +96,7 @@ function renderReadingList() {
     .join("");
 }
 
-// ---------- Filtering (search + category) ----------
+// ---------- Filtering ----------
 
 function getFilteredBooks() {
   const query = searchInput ? searchInput.value.trim().toLowerCase() : "";
@@ -98,6 +106,7 @@ function getFilteredBooks() {
       !query ||
       book.title.toLowerCase().includes(query) ||
       book.author.toLowerCase().includes(query);
+
     const matchesCategory = activeCategory === "all" || book.category === activeCategory;
     return matchesQuery && matchesCategory;
   });
@@ -111,11 +120,11 @@ function handleCategoryClick(event) {
   const chip = event.target.closest(".filter-chip");
   if (!chip || !categoryFilters) return;
 
-  activeCategory = chip.dataset.category;
+  activeCategory = chip.dataset.category || "all";
 
-  categoryFilters
-    .querySelectorAll(".filter-chip")
-    .forEach((el) => el.classList.remove("active"));
+  categoryFilters.querySelectorAll(".filter-chip").forEach((el) => {
+    el.classList.remove("active");
+  });
   chip.classList.add("active");
 
   handleFilterChange();
@@ -124,13 +133,26 @@ function handleCategoryClick(event) {
 // ---------- Modal ----------
 
 function openModal(book) {
-  if (!modalOverlay) return;
+  if (
+    !modalOverlay ||
+    !modalTitle ||
+    !modalAuthor ||
+    !modalCategory ||
+    !modalDescription ||
+    !modalAvailability
+  ) {
+    return;
+  }
+
   modalTitle.textContent = book.title;
   modalAuthor.textContent = book.author;
   modalCategory.textContent = book.category;
   modalDescription.textContent = book.description;
   modalAvailability.textContent = book.available ? "Available" : "Checked out";
-  modalAvailability.className = `modal-availability ${book.available ? "status-available" : "status-unavailable"}`;
+  modalAvailability.className = `modal-availability ${
+    book.available ? "status-available" : "status-unavailable"
+  }`;
+
   modalOverlay.hidden = false;
 }
 
@@ -139,15 +161,31 @@ function closeModal() {
   modalOverlay.hidden = true;
 }
 
-// ---------- Reading list ----------
+// ---------- Actions ----------
+
+function toggleAvailability(bookId) {
+  const targetId = String(bookId);
+  const book = BOOKS.find((b) => String(b.id) === targetId);
+  if (!book) return;
+
+  book.available = !book.available;
+  renderBooks(getFilteredBooks());
+
+  if (modalOverlay && !modalOverlay.hidden && modalTitle && modalTitle.textContent === book.title) {
+    openModal(book);
+  }
+}
 
 function toggleReadingList(bookId) {
-  const index = readingList.indexOf(bookId);
+  const normalizedId = String(bookId);
+  const index = readingList.indexOf(normalizedId);
+
   if (index === -1) {
-    readingList.push(bookId);
+    readingList.push(normalizedId);
   } else {
     readingList.splice(index, 1);
   }
+
   saveReadingList();
   renderReadingList();
   renderBooks(getFilteredBooks());
@@ -156,6 +194,12 @@ function toggleReadingList(bookId) {
 // ---------- Events ----------
 
 function handleGridClick(event) {
+  const toggleBtn = event.target.closest("[data-toggle]");
+  if (toggleBtn) {
+    toggleAvailability(toggleBtn.dataset.toggle);
+    return;
+  }
+
   const addBtn = event.target.closest("[data-add]");
   if (addBtn) {
     toggleReadingList(addBtn.dataset.add);
@@ -164,15 +208,19 @@ function handleGridClick(event) {
 
   const card = event.target.closest(".book-card");
   if (!card) return;
+
   const book = BOOKS.find((b) => String(b.id) === card.dataset.id);
   if (book) openModal(book);
 }
 
 // ---------- Init ----------
 
-if (!bookGrid || !searchInput || !categoryFilters) {
-  console.warn("Missing required DOM elements: #book-grid, #search-input, or #category-filters.");
-} else {
+function init() {
+  if (!bookGrid || !searchInput || !categoryFilters) {
+    console.warn("Missing required DOM elements: #book-grid, #search-input, or #category-filters.");
+    return;
+  }
+
   searchInput.addEventListener("input", handleFilterChange);
   categoryFilters.addEventListener("click", handleCategoryClick);
   bookGrid.addEventListener("click", handleGridClick);
@@ -183,6 +231,7 @@ if (!bookGrid || !searchInput || !categoryFilters) {
       if (e.target === modalOverlay) closeModal();
     });
   }
+
   document.addEventListener("keydown", (e) => {
     if (e.key === "Escape") closeModal();
   });
@@ -197,3 +246,5 @@ if (!bookGrid || !searchInput || !categoryFilters) {
   renderBooks(BOOKS);
   renderReadingList();
 }
+
+init();

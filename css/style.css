@@ -298,3 +298,16 @@ body {
   padding: 0.3rem 0.6rem;
   cursor: pointer;
 }
+
+.availability-btn {
+  width: 100%;
+  margin-top: 0.4rem;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  padding: 0.4rem;
+  background: transparent;
+  border: 1px solid var(--maroon);
+  color: var(--maroon);
+  border-radius: 3px;
+  cursor: pointer;
+}
