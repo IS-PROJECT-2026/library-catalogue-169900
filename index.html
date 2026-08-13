@@ -3,9 +3,50 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Library Catalogue</title>
+    <title>City Library Catalogue</title>
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-    <h1>Library Catalogue</h1>
+
+    <header class="site-header">
+        <div class="brand">📚 City Library</div>
+        <nav class="nav-links">
+            <a href="#catalogue">Catalogue</a>
+            <a href="#reading-list">My Reading List</a>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <h1>Discover Your Next Great Book</h1>
+        <div class="search-bar">
+            <input type="text" id="search-input" placeholder="Search books, authors...">
+        </div>
+        <div class="category-filters" id="category-filters">
+            <button class="filter-chip active" data-category="all">All</button>
+            <button class="filter-chip" data-category="fiction">Fiction</button>
+            <button class="filter-chip" data-category="science">Science</button>
+            <button class="filter-chip" data-category="history">History</button>
+            <button class="filter-chip" data-category="technology">Technology</button>
+        </div>
+    </section>
+
+    <section class="catalogue-section" id="catalogue">
+        <div class="book-grid" id="book-grid">
+            <!-- Book cards render here via app.js (Issue #5) -->
+        </div>
+    </section>
+
+    <section class="reading-list-section" id="reading-list">
+        <h2>My Reading List</h2>
+        <ul id="reading-list-items"></ul>
+        <p id="reading-list-empty">Your reading list is empty.</p>
+    </section>
+
+    <footer class="site-footer">
+        City Library Catalogue — a client-side demo project.
+    </footer>
+
+    <script src="js/data.js"></script>
+    <script src="js/app.js"></script>
 </body>
 </html>
