@@ -1,5 +1,8 @@
 const bookGrid = document.getElementById("book-grid");
 const searchInput = document.getElementById("search-input");
+const categoryFilters = document.getElementById("category-filters");
+
+let activeCategory = "all";
 
 function bookCardHTML(book) {
   const availability = book.available ? "Available" : "Checked out";
@@ -25,25 +28,40 @@ function renderBooks(books) {
 }
 
 function getFilteredBooks() {
-  if (!searchInput) return BOOKS;
+  const query = searchInput ? searchInput.value.trim().toLowerCase() : "";
 
-  const query = searchInput.value.trim().toLowerCase();
-  if (!query) return BOOKS;
-
-  return BOOKS.filter(
-    (book) =>
+  return BOOKS.filter((book) => {
+    const matchesQuery =
+      !query ||
       book.title.toLowerCase().includes(query) ||
-      book.author.toLowerCase().includes(query)
-  );
+      book.author.toLowerCase().includes(query);
+    const matchesCategory = activeCategory === "all" || book.category === activeCategory;
+    return matchesQuery && matchesCategory;
+  });
 }
 
-function handleSearch() {
+function handleFilterChange() {
   renderBooks(getFilteredBooks());
 }
 
-if (!bookGrid || !searchInput) {
-  console.warn("Missing required DOM elements: #book-grid or #search-input.");
+function handleCategoryClick(event) {
+  const chip = event.target.closest(".filter-chip");
+  if (!chip) return;
+
+  activeCategory = chip.dataset.category;
+
+  categoryFilters
+    .querySelectorAll(".filter-chip")
+    .forEach((el) => el.classList.remove("active"));
+  chip.classList.add("active");
+
+  handleFilterChange();
+}
+
+if (!bookGrid || !searchInput || !categoryFilters) {
+  console.warn("Missing required DOM elements: #book-grid, #search-input, or #category-filters.");
 } else {
-  searchInput.addEventListener("input", handleSearch);
+  searchInput.addEventListener("input", handleFilterChange);
+  categoryFilters.addEventListener("click", handleCategoryClick);
   renderBooks(BOOKS);
 }
