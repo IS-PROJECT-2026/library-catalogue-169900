@@ -124,8 +124,11 @@ function handleCategoryClick(event) {
 
   categoryFilters.querySelectorAll(".filter-chip").forEach((el) => {
     el.classList.remove("active");
+    el.setAttribute("aria-pressed", "false");
   });
+
   chip.classList.add("active");
+  chip.setAttribute("aria-pressed", "true");
 
   handleFilterChange();
 }
