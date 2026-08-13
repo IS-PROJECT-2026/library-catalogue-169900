@@ -167,7 +167,6 @@ body {
   }
 }
 
-
 .book-card {
   background: #fff;
   border: 1px solid #ddd0b8;
@@ -262,4 +261,40 @@ body {
   font-size: 0.8rem;
   font-weight: 500;
   margin: 0;
+}
+
+/* ---------- Reading list ---------- */
+
+.reading-list-btn {
+  width: 100%;
+  margin-top: 0.75rem;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  padding: 0.5rem;
+  background: var(--maroon);
+  color: var(--paper);
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.reading-list-btn:hover { background: var(--gold); }
+
+.reading-list-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.6rem 0;
+  border-bottom: 1px solid var(--shelf);
+}
+
+.reading-list-item button {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  background: none;
+  border: 1px solid var(--maroon);
+  color: var(--maroon);
+  border-radius: 3px;
+  padding: 0.3rem 0.6rem;
+  cursor: pointer;
 }
