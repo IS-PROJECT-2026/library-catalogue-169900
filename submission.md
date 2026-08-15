@@ -8,7 +8,7 @@ Email: john.mwiti@strathmore.edu
 
 ## 2. Deployed Project Link
 
-Live GitHub Pages URL: [Paste after Issue #16 is done]
+Live GitHub Pages URL: https://is-project-2026.github.io/library-catalogue-169900/
 
 ## 3. Reflection — Grounded in Your Git History
 
