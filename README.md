@@ -5,7 +5,7 @@ Users can search by title/author, filter by category, view full book details
 in a modal, check availability, and build a personal reading list persisted
 with `localStorage`.
 
-**Live site:** https://IS-PROJECT-2026.github.io/library-catalogue-169900/
+**Live site:** https://is-project-2026.github.io/library-catalogue-169900/
 
 ## Features
 
@@ -22,8 +22,8 @@ with `localStorage`.
 
 - HTML5, CSS3
 - Vanilla JavaScript (ES6+)
-  - `js/data.js` for catalogue seed data
-  - `js/app.js` for rendering, filtering, modal, availability, reading list
+- `js/catalogue.js` for catalogue seed data
+- `js/app.js` for rendering, filtering, modal, availability, reading list
 - Google Fonts: Playfair Display, Source Sans 3, IBM Plex Mono
 - GitHub Pages deployment from `main`
 
